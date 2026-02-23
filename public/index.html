@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Uranus - Audio to Product Description</title>
+    <link rel="stylesheet" href="/styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <main class="container">
+      <h1>Uranus Model Tester</h1>
+      <p class="subtitle">Audio input → formatted product description output</p>
+      <p id="requestStatus" class="request-status">Ready</p>
+
+      <section class="panel">
+        <div class="input-tabs">
+          <button id="audioTab" class="input-tab active" type="button">Audio Input</button>
+          <button id="urlTab" class="input-tab" type="button">URL Input</button>
+          <button id="ocrTab" class="input-tab" type="button">OCR Image</button>
+        </div>
+                <div id="ocrInputPanel" class="hidden">
+                  <div class="field">
+                    <label for="ocrImageFile">Upload product landing page image</label>
+                    <input id="ocrImageFile" type="file" accept="image/*" />
+                  </div>
+                  <div class="field">
+                    <label for="ocrModelSelect">Model</label>
+                    <select id="ocrModelSelect"></select>
+                  </div>
+                  <div class="field">
+                    <label for="ocrOutputLanguage">Output language</label>
+                    <select id="ocrOutputLanguage">
+                      <option value="en">English</option>
+                      <option value="fr">French</option>
+                      <option value="ar">Standard Arabic</option>
+                      <option value="tn">Tunisian Arabic</option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <label for="ocrPromptStyle">Prompt style</label>
+                    <select id="ocrPromptStyle">
+                      <option value="concise">Concise</option>
+                      <option value="detailed">Detailed</option>
+                      <option value="marketing">Marketing</option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <label for="ocrOutputVerbosity">Verbosity</label>
+                    <select id="ocrOutputVerbosity">
+                      <option value="concise">Concise</option>
+                      <option value="detailed">Detailed</option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <label for="ocrOutputFormat">Format</label>
+                    <select id="ocrOutputFormat">
+                      <option value="paragraph">Paragraph</option>
+                      <option value="bullets">Bullet points</option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <label for="ocrIncludeDetails">Include details (comma-separated, optional)</label>
+                    <input id="ocrIncludeDetails" type="text" placeholder="e.g. color, size, battery life" />
+                  </div>
+                  <div class="field">
+                    <label for="ocrExcludeDetails">Exclude details (comma-separated, optional)</label>
+                    <input id="ocrExcludeDetails" type="text" placeholder="e.g. price, warranty" />
+                  </div>
+                  <div class="actions">
+                    <button id="runOcrBtn" type="button">Run OCR</button>
+                    <button id="previewOcrPromptBtn" type="button">Preview Prompt</button>
+                  </div>
+                </div>
+        <div id="audioInputPanel">
+          <div class="field">
+            <label for="audioFile">Upload audio file</label>
+            <input id="audioFile" type="file" accept="audio/*" />
+          </div>
+
+          <div class="recorder-row">
+            <button id="recordBtn" type="button">Start recording</button>
+            <span id="recordStatus">Recorder idle</span>
+            <audio id="audioPlayback" controls class="hidden"></audio>
+          </div>
+
+          <div class="saved-audio-section">
+            <div class="saved-audio-row">
+              <label for="savedAudioSelect">Load saved audio:</label>
+              <select id="savedAudioSelect">
+                <option value="">-- Select saved audio --</option>
+              </select>
+              <button id="loadSavedAudioBtn" type="button">Load</button>
+            </div>
+            <div class="saved-audio-row">
+              <input id="saveAudioName" type="text" placeholder="Name for this audio" />
+              <button id="saveAudioBtn" type="button">Save current audio</button>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="modelSelect">Single model mode</label>
+            <select id="modelSelect"></select>
+          </div>
+
+          <div class="field">
+            <label for="outputLanguage">Output language</label>
+            <select id="outputLanguage">
+              <option value="en">English</option>
+              <option value="fr">French</option>
+              <option value="ar">Standard Arabic</option>
+              <option value="tn">Tunisian Arabic</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="promptStyle">Prompt style</label>
+            <select id="promptStyle">
+              <option value="concise">Concise</option>
+              <option value="detailed">Detailed</option>
+              <option value="marketing">Marketing</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="outputVerbosity">Verbosity</label>
+            <select id="outputVerbosity">
+              <option value="concise">Concise</option>
+              <option value="detailed">Detailed</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="outputFormat">Format</label>
+            <select id="outputFormat">
+              <option value="paragraph">Paragraph</option>
+              <option value="bullets">Bullet points</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="includeDetails">Include details (comma-separated, optional)</label>
+            <input id="includeDetails" type="text" placeholder="e.g. color, size, battery life" />
+          </div>
+          <div class="field">
+            <label for="excludeDetails">Exclude details (comma-separated, optional)</label>
+            <input id="excludeDetails" type="text" placeholder="e.g. price, warranty" />
+          </div>
+          <div class="actions">
+            <button id="runOneBtn" type="button">Run selected model</button>
+            <button id="runAllBtn" type="button">Run all models</button>
+            <button id="previewAudioPromptBtn" type="button">Preview Prompt</button>
+            <button id="refreshTelemetryBtn" type="button">Refresh telemetry</button>
+          </div>
+        </div>
+        <div id="urlInputPanel" class="hidden">
+          <div class="field">
+            <label for="urlDescribeInput">Summarize a webpage (URL)</label>
+            <input id="urlDescribeInput" type="url" placeholder="https://example.com/article" style="width: 60%" />
+            <button id="runUrlDescribeBtn" type="button">Summarize URL</button>
+            <button id="previewUrlPromptBtn" type="button">Preview Prompt</button>
+          </div>
+          <div class="field">
+            <label for="modelSelectUrl">Model</label>
+            <select id="modelSelectUrl"></select>
+          </div>
+          <div class="customization-section">
+            <h4>Customization Options</h4>
+            <div class="field">
+              <label for="outputLanguageUrl">Output language</label>
+              <select id="outputLanguageUrl">
+                <option value="en">English</option>
+                <option value="fr">French</option>
+                <option value="ar">Standard Arabic</option>
+                <option value="tn">Tunisian Arabic</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="promptStyleUrl">Prompt style</label>
+              <select id="promptStyleUrl">
+                <option value="concise">Concise</option>
+                <option value="detailed">Detailed</option>
+                <option value="marketing">Marketing</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="outputVerbosityUrl">Verbosity</label>
+              <select id="outputVerbosityUrl">
+                <option value="concise">Concise</option>
+                <option value="detailed">Detailed</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="outputFormatUrl">Format</label>
+              <select id="outputFormatUrl">
+                <option value="paragraph">Paragraph</option>
+                <option value="bullets">Bullet points</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="includeDetailsUrl">Include details (comma-separated, optional)</label>
+              <input id="includeDetailsUrl" type="text" placeholder="e.g. color, size, battery life" />
+            </div>
+            <div class="field">
+              <label for="excludeDetailsUrl">Exclude details (comma-separated, optional)</label>
+              <input id="excludeDetailsUrl" type="text" placeholder="e.g. price, warranty" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Results</h2>
+        <div id="resultsLoading" class="results-loading hidden" aria-live="polite">
+          <div class="spinner" aria-hidden="true"></div>
+          <p id="resultsLoadingText">Processing...</p>
+        </div>
+        <div id="results"></div>
+      </section>
+
+      <section class="panel">
+        <h2>Telemetry Summary</h2>
+        <div id="telemetryDashboard"></div>
+        <div class="telemetry-raw-header">
+          <button id="toggleRawTelemetryBtn" type="button">Show raw JSON</button>
+        </div>
+        <pre id="telemetry" class="hidden"></pre>
+      </section>
+
+      <section class="panel">
+        <h2>Graphs</h2>
+        <div class="graph-tabs">
+          <button id="tabCost" class="graph-tab active" data-tab="cost">Cost</button>
+          <button id="tabSuccess" class="graph-tab" data-tab="success">Success Rate</button>
+          <button id="tabTokens" class="graph-tab" data-tab="tokens">Token Usage</button>
+          <button id="tabHistory" class="graph-tab" data-tab="history">Response History</button>
+        </div>
+        <div id="graphsTab">
+          <div id="graphCostContainer" class="graph-container">
+            <canvas id="costGraph"></canvas>
+          </div>
+          <div id="graphSuccessContainer" class="graph-container hidden">
+            <canvas id="latencyGraph"></canvas>
+          </div>
+          <div id="graphTokensContainer" class="graph-container hidden">
+            <canvas id="metricsGraph"></canvas>
+          </div>
+          <div id="graphHistoryContainer" class="history-container hidden">
+            <div class="history-filter">
+              <label for="historyModelFilter">Filter by model:</label>
+              <select id="historyModelFilter">
+                <option value="">All models</option>
+              </select>
+            </div>
+            <div id="historyContent"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script src="/app.js" type="module"></script>
+  </body>
+</html>

@@ -1,0 +1,37 @@
+{
+  "name": "uranus",
+  "version": "1.0.0",
+  "description": "Converty Store Front Dashboard ChatBot - LLM chat service",
+  "main": "./src/index.ts",
+  "type": "commonjs",
+  "scripts": {
+    "dev": "tsx watch -r tsconfig-paths/register src/index.ts",
+    "start": "tsx -r tsconfig-paths/register src/index.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "chatbot",
+    "llm",
+    "converty"
+  ],
+  "author": "Converty",
+  "license": "ISC",
+  "dependencies": {
+    "@ai-sdk/google-vertex": "^4.0.42",
+    "@google-cloud/vision": "^5.3.4",
+    "ai": "^6.0.21",
+    "dotenv": "^17.2.3",
+    "express": "^4.21.0",
+    "redis": "^5.10.0",
+    "tsconfig-paths": "^4.2.0",
+    "uuid": "^10.0.0",
+    "zod": "^4.3.5"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^22.13.10",
+    "@types/uuid": "^10.0.0",
+    "tsx": "^4.21.0",
+    "typescript": "^5.8.2"
+  }
+}
